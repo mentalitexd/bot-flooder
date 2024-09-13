@@ -5,48 +5,41 @@ import os
 import sys
 from colorama import Fore, Style, init
 
-# colorama için başlatma işlemi (Windows için gerekli)
 init(autoreset=True)
 
-# intents (izinler) için gerekli ayarlar
 intents = discord.Intents.all()
 
-# tokens.txt dosyasından tokenleri okuyarak bir listeye ekliyoruz
 def load_tokens():
     with open('tokens.txt', 'r') as file:
         tokens = [line.strip() for line in file.readlines()]
     return tokens
 
-# Konsolu temizlemek için fonksiyon (Windows ve Unix için uyumlu)
 def clear_console():
-    if os.name == 'nt':  # Windows
+    if os.name == 'nt':
         os.system('cls')
-    else:  # Unix (Linux/Mac)
+    else:
         os.system('clear')
 
-# Banner oluşturma
 def print_banner():
-    clear_console()  # Konsolu temizle
+    clear_console()
     print(Fore.BLUE + "===============================")
     print(Fore.BLUE + "Mentalite Tarafından Yapılmıştır")
     print(Fore.BLUE + "===============================\n")
     print(Fore.YELLOW + "1. Tokenleri Aktif Et")
-    print(Fore.YELLOW + "0. Çıkış Yap\n")
+    print(Fore.YELLOW + "0. Çıkış Yapınn")
 
-# Botu başlatan fonksiyon
 async def start_bot(token):
     bot = commands.Bot(command_prefix='!', intents=intents)
 
     @bot.event
     async def on_ready():
-        print(f'{bot.user} ({token[:5]}...) is online!')
+        print(f'{bot.user} ({token[:5]}...) Aktif!')
 
-    # !dm komutu, belirtilen kullanıcıya mesaj gönderir
     @bot.command()
     async def dm(ctx, user_id: int, *, message):
         user = bot.get_user(user_id)
         if user:
-            await ctx.send(f"How many times do you want to send the message to {user}?")
+            await ctx.send(f"{user} kullanıcısına mesajı kaç kez göndermek istiyorsunuz?")
             
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel and m.content.isdigit()
@@ -58,36 +51,32 @@ async def start_bot(token):
                 for _ in range(message_count):
                     await user.send(message)
                     
-                await ctx.send(f'Successfully sent {message_count} message(s) to {user}!')
+                await ctx.send(f'{message_count} mesajı {user} adlı kullanıcıya başarıyla gönderildi!')
                 
             except asyncio.TimeoutError:
-                await ctx.send("You didn't respond in time. Command cancelled.")
+                await ctx.send("Zamanında cevap vermediniz. Komut iptal edildi.")
             
         else:
-            await ctx.send("User not found.")
+            await ctx.send("Kullanıcı bulunamadı.")
 
     await bot.start(token)
 
-# Tüm botları aynı anda başlatmak için asyncio kullanıyoruz
 async def main():
-    tokens = load_tokens()  # Tokenleri dosyadan yüklüyoruz
-    await asyncio.gather(*(start_bot(token) for token in tokens))  # Tüm tokenleri başlatıyoruz
+    tokens = load_tokens()
+    await asyncio.gather(*(start_bot(token) for token in tokens))
 
 # Ana işlem akışı
 def run_tool():
     while True:
-        print_banner()  # Banner ve seçenekleri göster
-        choice = input(Fore.CYAN + "Seçiminizi yapın: ")  # Kullanıcıdan giriş al
+        print_banner()
+        choice = input(Fore.CYAN + "Seçiminizi yapın: ")
         if choice == '1':
-            # Tokenleri aktif et
             print(Fore.GREEN + "Tokenler aktif ediliyor...\n")
-            asyncio.run(main())  # Tokenleri çalıştır
+            asyncio.run(main())
         elif choice == '0':
-            # Çıkış yap
             print(Fore.RED + "Çıkış yapılıyor...")
-            sys.exit()  # Programı kapat
+            sys.exit()
         else:
             print(Fore.RED + "Geçersiz seçim! Tekrar deneyin.\n")
 
-# Aracı başlatıyoruz
 run_tool()
