@@ -14,4 +14,4 @@ Sonra her bottan kaç tane mesaj atılsın onu giriyon,
 
 ***Discord Sunucumuza Bekleriz***
 <br> </br>
-[![Discord Sunucumuz](https://api.weblutions.com/discord/invite/warexial/)](https://discord.gg/warexial)
+[![Discord Sunucumuz](https://api.weblutions.com/discord/invite/1092/)](https://discord.gg/1092)
